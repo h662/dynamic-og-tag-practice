@@ -7,9 +7,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const validIds = ["1", "2", "3", "4"];
-  const image = validIds.includes(id) ? `/${id}.jpg` : `1.jpg`;
+  const image = validIds.includes(id) ? `/${id}.jpg` : `/1.jpg`;
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
   return {
     metadataBase: new URL(baseUrl),
@@ -22,7 +24,7 @@ export async function generateMetadata({
         "Learn  how to dynamically assign meta tags with fixed images for rich social media previews.",
       images: [
         {
-          url: image,
+          url: `${baseUrl}${image}`,
           width: 1200,
           height: 630,
           alt: `Social Share Image ${id}`,
@@ -36,7 +38,7 @@ export async function generateMetadata({
       title: `Social Share Example ${id} - My NextJS App`,
       description:
         "Experience enhanced social media sharing with fixed images using OpenGraph and Twitter Card meta tags.",
-      images: [image],
+      images: [`${baseUrl}${image}`],
     },
   };
 }
